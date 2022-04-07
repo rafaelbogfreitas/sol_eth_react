@@ -2,6 +2,25 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract Faucet {
-  uint public funds = 1000;
-  int public counter = -10;
-};
+  address[] public funders;
+
+  receive() external payable {}
+
+  function addFunds() external payable {
+    bool existentFunder = false;
+
+    for (uint256 index = 0; index < funders.length; index++) {
+      if(msg.sender == funders[index]) {
+        existentFunder = true;
+      }
+    }
+
+    if(!existentFunder) {
+      funders.push(msg.sender);
+    }
+  }
+
+  function getFunders() external view returns(address[] memory) {
+    return funders;
+  }
+}
